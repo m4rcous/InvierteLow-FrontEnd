@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Letras y Carteras</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="sidenav">
+        <button onclick="showSection('letras')">📄 Gestión de Letras</button>
+        <button onclick="showSection('cartera-letras')">📂 Gestión de Carteras</button>
+    </div>
+    <div id="content">
+        <!-- Sección Letras -->
+        <section id="letras-section" class="hidden">
+            <h1>📄 Gestión de Letras</h1>
+            <form id="crear-letra-form">
+                <div class="form-group">
+                    <label for="fechaGiro">Fecha de Giro:</label>
+                    <input type="date" id="fechaGiro" name="fechaGiro" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaVencimiento">Fecha de Vencimiento:</label>
+                    <input type="date" id="fechaVencimiento" name="fechaVencimiento" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="valorNominal">Valor Nominal:</label>
+                    <input type="number" id="valorNominal" name="valorNominal" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="retencion">Retención:</label>
+                    <input type="number" id="retencion" name="retencion" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tasa">Tasa:</label>
+                    <input type="number" id="tasa" name="tasa" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoDeTasa">Tipo de Tasa:</label>
+                    <select id="tipoDeTasa" name="tipoDeTasa" required>
+                        <option value="NOMINAL">Nominal</option>
+                        <option value="EFECTIVA">Efectiva</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="diasPorAnio">Días por Año:</label>
+                    <input type="number" id="diasPorAnio" name="diasPorAnio" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="plazoDeTasa">Plazo de Tasa:</label>
+                    <select id="plazoDeTasa" name="plazoDeTasa" required>
+                        <option value="DIARIO">Diario</option>
+                        <option value="SEMANAL">Semanal</option>
+                        <option value="MENSUAL">Mensual</option>
+                        <option value="BIMESTRAL">Bimestral</option>
+                        <option value="TRIMESTRAL">Trimestral</option>
+                        <option value="SEMESTRAL">Semestral</option>
+                        <option value="ANUAL">Anual</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaDeDescuento">Fecha de Descuento:</label>
+                    <input type="date" id="fechaDeDescuento" name="fechaDeDescuento" required>
+                </div>
+            </form>
+
+            <!-- Costos Iniciales -->
+            <div>
+                <h2>🛠️ Costos Iniciales</h2>
+                <form id="costos-iniciales-form">
+                    <div class="form-group">
+                        <label for="motivo-inicial">Motivo:</label>
+                        <input type="text" id="motivo-inicial" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="valor-inicial">Valor:</label>
+                        <input type="number" id="valor-inicial" required>
+                    </div>
+                    <button type="button" class="primary-button" onclick="agregarCosto('INICIAL')">Agregar Costo Inicial</button>
+                </form>
+                <table id="costos-iniciales-tabla">
+                    <thead>
+                        <tr>
+                            <th>Motivo</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Costos Finales -->
+            <div>
+                <h2>📋 Costos Finales</h2>
+                <form id="costos-finales-form">
+                    <div class="form-group">
+                        <label for="motivo-final">Motivo:</label>
+                        <input type="text" id="motivo-final" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="valor-final">Valor:</label>
+                        <input type="number" id="valor-final" required>
+                    </div>
+                    <button type="button" class="primary-button" onclick="agregarCosto('FINAL')">Agregar Costo Final</button>
+                </form>
+                <table id="costos-finales-tabla">
+                    <thead>
+                        <tr>
+                            <th>Motivo</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <button id="crear-letra" class="primary-button" onclick="crearLetra()">Crear Letra</button>
+
+            <h2>📊 Resultados</h2>
+            <table id="letras-resultados" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Número de Días</th>
+                        <th>Tasa Efectiva</th>
+                        <th>Tasa Descontada</th>
+                        <th>Descuento</th>
+                        <th>Retención</th>
+                        <th>Valor Neto</th>
+                        <th>Valor Recibido</th>
+                        <th>Valor Entregado</th>
+                        <th>TCEA</th>
+                    </tr>
+                </thead>
+                <tbody id="letras-table-body"></tbody>
+            </table>
+        </section>
+
+        <!-- Sección Carteras -->
+        <section id="cartera-letras-section" class="hidden">
+            <h1>📂 Gestión de Carteras de Letras</h1>
+            <button id="crear-cartera" class="primary-button">Crear Cartera</button>
+            <form id="agregar-letra-cartera-form" class="hidden">
+                <div class="form-group">
+                    <label for="letraId">ID de la Letra:</label>
+                    <input type="number" id="letraId" name="letraId" required>
+                </div>
+                <button type="submit" class="primary-button">Agregar Letra a la Cartera</button>
+            </form>
+            <h2>📊 Resultados de la Cartera</h2>
+            <table id="cartera-resultados" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Valor Total Recibido</th>
+                        <th>TCEA Cartera</th>
+                    </tr>
+                </thead>
+                <tbody id="cartera-table-body"></tbody>
+            </table>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
