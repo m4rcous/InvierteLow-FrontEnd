@@ -217,3 +217,7 @@ async function crearLetra() {
     alert("Ocurrió un error al procesar la letra. Por favor, verifica los datos ingresados.");
   }
 }
+
+function redirectTo(page) {
+  window.location.href = page;
+}

@@ -142,3 +142,14 @@ button:hover {
   background-color: #86b37e;
   color: white;
 }
+
+.logout-button {
+  margin-top: auto;
+  background-color: #d9534f;
+  color: white;
+  font-weight: bold;
+}
+
+.logout-button:hover {
+  background-color: #c9302c;
+}
